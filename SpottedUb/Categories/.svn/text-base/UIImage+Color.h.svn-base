@@ -1,0 +1,25 @@
+//
+//  UIImage+Color.h
+//  Remote
+//
+//  Created by Tieme van Veen on 12/28/12.
+//  Copyright (c) 2012 Momkai. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface UIImage (Color)
+
++ (UIImage *) imageWithHexColor:(UInt32)hex;
++ (UIImage *) imageWithHexStringColor:(NSString *)hex;
++ (UIImage *) imageWithColor:(UIColor *)color;
+
+//black 10% overlay
++ (UIImage *) highlightedWithHexColor:(UInt32)hex;
++ (UIImage *) highlightedWithHexStringColor:(NSString *)hex;
++ (UIImage *) highlightedImageNamed:(NSString *)name;
+
+- (UIImage *) colorizeWithColor:(UIColor *)color alpha:(float)alpha blendMode:(CGBlendMode)blendMode;
++ (UIImage *) imageWithCGColorRef:(CGColorRef)ref;
+
+@end

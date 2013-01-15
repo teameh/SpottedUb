@@ -1,0 +1,37 @@
+//
+//  UIView+hideKeyboard.m
+//  Remote
+//
+//  Created by Tieme van Veen on 12/4/12.
+//  Copyright (c) 2012 Momkai. All rights reserved.
+//
+
+#import "UIView+hideKeyboard.h"
+
+@implementation UIView (hideKeyboard)
+
+- (void) resignFirstResponderToHideKeyboard {
+    
+    //http://stackoverflow.com/a/10964295/672989
+    
+    // Called here to avoid calling it iteratively unnecessarily.
+    Class viewControllerClass = [UIViewController class];
+    
+    //get responder
+    UIResponder *responder = self.superview != nil ? self.superview : self;
+    
+    //traverse up all responders...
+    while ((responder = [responder nextResponder])) {
+        
+        //...till we find a viewcontroller
+        if ([responder isKindOfClass:viewControllerClass]) {
+            
+            //end editing to hide keyboard
+            [[(UIViewController *)responder view] endEditing:YES];
+            
+            return;
+        }
+    }
+}
+
+@end

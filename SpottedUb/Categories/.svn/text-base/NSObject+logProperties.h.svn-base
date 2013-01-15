@@ -1,0 +1,13 @@
+//
+//  DisplayTableViewController+logProperties.h
+//  Remote
+//
+//  Created by Tieme van Veen on 12/17/12.
+//  Copyright (c) 2012 Momkai. All rights reserved.
+//
+
+    @interface NSObject (logProperties)
+
+    - (void) logProperties;
+
+    @end

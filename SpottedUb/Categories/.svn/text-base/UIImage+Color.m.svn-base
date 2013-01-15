@@ -1,0 +1,85 @@
+//
+//  UIImage+Color.m
+//  Remote
+//
+//  Created by Tieme van Veen on 12/28/12.
+//  Copyright (c) 2012 Momkai. All rights reserved.
+//
+
+#import "UIImage+Color.h"
+#import "UIColor+ColorWithHex.h"
+
+@implementation UIImage (Color)
+
+#pragma mark - Helpers
++ (UIImage *)imageWithHexColor:(UInt32)hex {
+    return [UIImage imageWithCGColorRef:[[UIColor colorWithHex:hex] CGColor]];
+}
++ (UIImage *)imageWithHexStringColor:(NSString *)hex {
+    return [UIImage imageWithCGColorRef:[[UIColor colorWithHexString:hex] CGColor]];
+}
++ (UIImage *)imageWithColor:(UIColor *)color{
+    return [UIImage imageWithCGColorRef:[color CGColor]];
+}
+
++ (UIImage *) highlightedWithHexColor:(UInt32)hex {
+    return [[UIImage imageWithHexColor:hex] colorizeWithColor:[UIColor blackColor] alpha:0.1f blendMode:kCGBlendModeMultiply];
+}
++ (UIImage *) highlightedWithHexStringColor:(NSString *)hex {
+    return [[UIImage imageWithHexStringColor:hex] colorizeWithColor:[UIColor blackColor] alpha:0.1f  blendMode:kCGBlendModeMultiply];
+}
++ (UIImage *) highlightedImageNamed:(NSString *)name {
+    return [[UIImage imageNamed:name] colorizeWithColor:[UIColor blackColor] alpha:0.1f blendMode:kCGBlendModeMultiply];
+}
+
+
+#pragma mark - Real deal
++ (UIImage *) imageWithCGColorRef:(CGColorRef)ref{
+    
+    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0.0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, ref);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
+- (UIImage *) colorizeWithColor:(UIColor *)color alpha:(float)alpha blendMode:(CGBlendMode)blendMode{
+    
+    if(self == nil){return nil;}
+    
+    CGImageRef image = [self CGImage];
+    CGFloat width = CGImageGetWidth(image);
+    CGFloat height = CGImageGetHeight(image);
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    
+    UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextTranslateCTM(context, 0, height / scale);
+    CGContextScaleCTM(context, 1.0, -1.0);
+    
+    CGRect rect = CGRectMake(0, 0, width / scale, height / scale);
+    
+    CGContextSaveGState(context);
+    CGContextClipToMask(context, rect, self.CGImage);
+    
+    [[color colorWithAlphaComponent:alpha] set];
+    
+    CGContextFillRect(context, rect);
+    CGContextRestoreGState(context);
+    CGContextSetBlendMode(context, blendMode);
+    CGContextDrawImage(context, rect, image);
+    
+    UIImage *colorizedImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    return colorizedImage;
+}
+@end

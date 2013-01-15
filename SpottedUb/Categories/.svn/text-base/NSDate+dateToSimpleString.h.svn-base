@@ -1,0 +1,17 @@
+//
+//  NSDate+dateToSimpleString.h
+//  Remote
+//
+//  Created by Tieme van Veen on 11/12/12.
+//  Copyright (c) 2012 Momkai. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface NSDate (dateToSimpleString)
+
+
+- (NSString *) dateToSimpleString;
++ (NSDate *) dateFromSimpleString:(NSString *)date;
+
+@end
